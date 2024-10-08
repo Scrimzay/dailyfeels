@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Feed - Home</title>
+    <style>
+        body {
+            background-color: #add8e6; /* Light blue background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 50%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .feed {
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .post {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .post:last-child {
+            border-bottom: none;
+        }
+        .post .author {
+            font-weight: bold;
+        }
+        .post .timestamp {
+            color: #888;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="feed">
+            {{ if .Error }}
+                <p style="color: red;">{{ .Error }}</p>
+            {{ end }}
+            {{ range .Posts }}
+                <div class="post">
+                    <div class="author">User: {{ .ObfuscatedID }}</div>
+                    <div class="text">{{ .Text }}</div>
+                    <div class="timestamp">{{ .CreatedAt.Format "Jan 2, 2006 at 3:04pm" }}</div>
+                </div>
+            {{ else }}
+                <p>No posts yet.</p>
+            {{ end }}
+        </div>
+    </div>
+</body>
+</html>
