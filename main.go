@@ -86,10 +86,10 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("public/*.html")
 
-	err := godotenv.Load("main.env")
-	if err != nil {
-		log.Fatalf("Error loading main.env file: %v", err)
-	}
+	// err := godotenv.Load("main.env")
+	// if err != nil {
+	// 	log.Fatalf("Error loading main.env file: %v", err)
+	// }
 
 	sessionKey := os.Getenv("SESSION_SECRET")
 	if sessionKey == "" {
@@ -121,7 +121,7 @@ func main() {
 	r.GET("/feed", AuthRequired(store), FeedHandler)
 	r.POST("/feed", AuthRequired(store), PostFeedHandler)
 
-	err = r.Run(":3000")
+	err := r.Run(":3000")
 	if err != nil {
 		log.Fatal(err)
 	}
