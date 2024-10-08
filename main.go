@@ -193,7 +193,7 @@ func ConnectToProvider() {
 		//google.New(os.Getenv("GOOGLE_ID"), os.Getenv("GOOGLE_SECRET"), "http://localhost:3000/auth/google/callback", "email", "profile"),
 		//twitter.New(os.Getenv("TWITTER_ID"), os.Getenv("TWITTER_SECRET"), "http://localhost:3000/auth/twitter/callback"),
 		github.New(os.Getenv("GITHUB_ID"), os.Getenv("GITHUB_SECRET"), "http://localhost:3000/auth/github/callback"),
-		spotify.New(os.Getenv("SPOTIFY_ID"), os.Getenv("SPOTIFY_SECRET"), "http://localhost:3000/auth/spotify/callback"),
+		spotify.New(os.Getenv("SPOTIFY_ID"), os.Getenv("SPOTIFY_SECRET"), os.Getenv("DAILYFEELS_CALLBACK_URI")),
 		//facebook.New(os.Getenv("META_ID"), os.Getenv("META_SECRET"), "http://localhost:3000/auth/facebook/callback"),
 	)
 }
