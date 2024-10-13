@@ -85,6 +85,7 @@ func InitializeIndexes() {
 func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("public/*.html")
+	r.Static("/static", "./static")
 
 	// err := godotenv.Load("main.env")
 	// if err != nil {
