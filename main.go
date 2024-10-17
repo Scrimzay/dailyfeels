@@ -11,7 +11,7 @@ import (
 	"os"
 	"time"
 	"strings"
-	"html/template"
+	//"html/template"
 
     "go.mongodb.org/mongo-driver/bson/primitive"
 	"github.com/gin-gonic/gin"
@@ -426,8 +426,8 @@ func PostFeedHandler(c *gin.Context) {
 	}
 
 	// Sanitize input by escaping HTML and trimming spaces
-	sanitizedText := template.HTMLEscapeString(text)
-	sanitizedText = strings.TrimSpace(sanitizedText)
+	//sanitizedText := template.HTMLEscapeString(text)
+	sanitizedText := strings.TrimSpace(text)
 
 	// Create a new post
 	newPost := Post{
