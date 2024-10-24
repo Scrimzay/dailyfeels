@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"crypto/sha256"
-	//"database/sql"
 	"encoding/hex"
 	"fmt"
 	"log"
@@ -11,24 +10,18 @@ import (
 	"os"
 	"time"
 	"strings"
-	//"html/template"
 
     "go.mongodb.org/mongo-driver/bson/primitive"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	//"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 
-	//"github.com/markbates/goth/providers/facebook"
-	"github.com/markbates/goth/providers/github"
-	//"github.com/markbates/goth/providers/google"
 	"github.com/markbates/goth/providers/spotify"
-	//"github.com/markbates/goth/providers/twitter"
 )
 
 var (
@@ -86,11 +79,6 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("public/*.html")
 	r.Static("/static", "./static")
-
-	// err := godotenv.Load("main.env")
-	// if err != nil {
-	// 	log.Fatalf("Error loading main.env file: %v", err)
-	// }
 
 	sessionKey := os.Getenv("SESSION_SECRET")
 	if sessionKey == "" {
@@ -191,11 +179,7 @@ func ConnectToProvider() {
 	gothic.Store = store
 
 	goth.UseProviders(
-		//google.New(os.Getenv("GOOGLE_ID"), os.Getenv("GOOGLE_SECRET"), "http://localhost:3000/auth/google/callback", "email", "profile"),
-		//twitter.New(os.Getenv("TWITTER_ID"), os.Getenv("TWITTER_SECRET"), "http://localhost:3000/auth/twitter/callback"),
-		github.New(os.Getenv("GITHUB_ID"), os.Getenv("GITHUB_SECRET"), "http://localhost:3000/auth/github/callback"),
 		spotify.New(os.Getenv("SPOTIFY_ID"), os.Getenv("SPOTIFY_SECRET"), os.Getenv("DAILYFEELS_CALLBACK_URI")),
-		//facebook.New(os.Getenv("META_ID"), os.Getenv("META_SECRET"), "http://localhost:3000/auth/facebook/callback"),
 	)
 }
 
@@ -251,8 +235,6 @@ func BeginAuthHandler(c *gin.Context) {
 	q.Add("provider", provider)
 	c.Request.URL.RawQuery = q.Encode()
 
-	//fmt.Println("Request URL: ", c.Request.URL.String())
-
 	gothic.BeginAuthHandler(c.Writer, c.Request)
 }
 
@@ -260,7 +242,6 @@ func CompleteAuthHandler(c *gin.Context) {
 	fmt.Println("****COMPLETE AUTH HANDLER RUNNING****")
 
 	provider := c.Param("provider")
-	//fmt.Println("Provider: ", provider)
 
 	user, err := gothic.CompleteUserAuth(c. Writer, c.Request)
 	if err != nil {
@@ -269,13 +250,6 @@ func CompleteAuthHandler(c *gin.Context) {
 		return
 	}
 
-	//fmt.Println("Authenticated user: ", user)
-
-	// fmt.Println("Connecting to DB")
-	// db := ConnectToDatabase()
-	// defer db.Close()
-
-	// fmt.Println("Connected to DB")
 	email := user.Email
 	userid := user.UserID
 
@@ -286,8 +260,6 @@ func CompleteAuthHandler(c *gin.Context) {
 		log.Fatal("Failed to create or retrieve session")
 		return
 	}
-
-	//fmt.Println("Created or recieved session")
 
 	// Access the MongoDB collection
     usersCollection := db.Collection("users")
@@ -328,8 +300,6 @@ func CompleteAuthHandler(c *gin.Context) {
         fmt.Println("User already in database")
     }
 
-	//fmt.Println("User added to DB")
-
 	session.Values["obfuscated_id"] = obfuscatedID
 	session.Values["user_id"] = userid
 
@@ -339,10 +309,6 @@ func CompleteAuthHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Session error"})
 		return
 	}
-
-	// fmt.Println("User Info stored in session")
-	// fmt.Println("UserID: ", userid)
-	// fmt.Println("Obfuscated UserID: ", obfuscatedID)
 
 	c.Redirect(http.StatusFound, "/")
 }
@@ -426,7 +392,6 @@ func PostFeedHandler(c *gin.Context) {
 	}
 
 	// Sanitize input by escaping HTML and trimming spaces
-	//sanitizedText := template.HTMLEscapeString(text)
 	sanitizedText := strings.TrimSpace(text)
 
 	// Create a new post
